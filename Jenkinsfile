@@ -12,11 +12,7 @@ pipeline {
             }
         } 
         stage('Building our image') { 
-            steps { 
-                script { 
-                sh 'docker build -t docsearce/poc:2.0.0 .'
-                }
-            } 
+            sh 'docker build -t docsearce/poc:2.0.0 .'
         }
          
     }
