@@ -3,12 +3,14 @@ pipeline {
         registry = "docsearce/poc" 
         registryCredential = 'docsearce' 
         dockerImage = '' 
+        gitUrl =  'https://github.com/dc-searce/doc-application.git' 
     }
     agent any 
     stages { 
         stage('Cloning our Git') { 
             steps { 
-                git 'https://github.com/dc-searce/doc-application.git' 
+                
+                git branch: 'master', url:gitUrl
             }
         } 
         stage('Building our image') { 
