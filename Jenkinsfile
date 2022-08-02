@@ -8,7 +8,7 @@ pipeline {
     stages { 
         stage('Cloning our Git') { 
             steps { 
-                git 'https://github.com/dc-searce/doc-application.git' 
+                git branch: 'master', url:'https://github.com/dc-searce/doc-application.git' 
             }
         } 
         stage('Building our image') { 
