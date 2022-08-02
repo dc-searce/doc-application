@@ -14,7 +14,7 @@ pipeline {
         stage('Building our image') { 
             steps { 
                 script { 
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                sh 'docker build -t docsearce/poc:2.0.0 .'
                 }
             } 
         }
