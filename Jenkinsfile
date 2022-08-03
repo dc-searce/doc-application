@@ -13,13 +13,7 @@ pipeline {
         } 
         stage('Building our image') { 
             steps { 
-                sh '''
-                docker version
-                docker info
-                docker compose info
-                curl --version
-                jq --version
-                '''
+                sh 'docker build -t doc-application:1.0 .' 
             } 
         }
          
