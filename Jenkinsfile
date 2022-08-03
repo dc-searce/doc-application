@@ -13,9 +13,7 @@ pipeline {
         } 
         stage('Building our image') { 
             steps { 
-                script {
-                    dockerImage = docker.build registry
-                }
+                  sh 'docker build -f doc-application:1.0 ./' 
             } 
         }
          
