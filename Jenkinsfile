@@ -13,7 +13,7 @@ pipeline {
         } 
         stage('Building our image') { 
             steps { 
-                  sh 'docker build .' 
+                  sh 'docker build -t doc-application + ":$BUILD_NUMBER" + ./' 
             } 
         }
          
