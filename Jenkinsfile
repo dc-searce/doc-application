@@ -1,6 +1,6 @@
 pipeline { 
     environment { 
-        registry = "docsearce/poc" 
+        registry = "docsearce/doc-application" 
         registryCredential = 'docsearce' 
         dockerImage = '' 
     }
@@ -13,7 +13,9 @@ pipeline {
         } 
         stage('Building our image') { 
             steps { 
-                sh 'docker build -t doc-application:1.0 .' 
+                script {
+                    dockerImage = docker.build registry
+                }
             } 
         }
          
