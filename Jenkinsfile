@@ -16,6 +16,11 @@ pipeline {
                   sh 'docker build -t doc-application:1.0."$BUILD_NUMBER" .' 
             } 
         }
+        stage('Push our image') { 
+            steps { 
+                  sh 'docker push doc-application:1.0."$BUILD_NUMBER"' 
+            } 
+        }
          
     }
 }
