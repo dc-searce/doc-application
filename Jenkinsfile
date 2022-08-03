@@ -13,7 +13,7 @@ pipeline {
         } 
         stage('Building our image') { 
             steps { 
-                  sh 'docker build -f doc-application:1.0 ./' 
+                  sh 'docker build .' 
             } 
         }
          
