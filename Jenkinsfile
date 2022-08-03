@@ -13,7 +13,13 @@ pipeline {
         } 
         stage('Building our image') { 
             steps { 
-                sh 'docker build -t docsearce/poc:2.0.0 .'
+                sh '''
+                docker version
+                docker info
+                docker compose info
+                curl --version
+                jq --version
+                '''
             } 
         }
          
