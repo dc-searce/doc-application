@@ -12,15 +12,11 @@ pipeline {
             }
         } 
         stage('Building our image') { 
-            steps { 
-                  sh 'docker build -t doc-application:1.0."$BUILD_NUMBER" .' 
+            steps {  
+                dockerImage = docker.build registry + ":$BUILD_NUMBER ."
             } 
         }
-        stage('Push our image') { 
-            steps { 
-                  sh 'docker push doc-application:1.0."$BUILD_NUMBER"' 
-            } 
-        }
+       
          
     }
 }
