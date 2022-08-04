@@ -1,7 +1,7 @@
 pipeline { 
     environment { 
         registry = "docsearce/doc-application" 
-        registryCredential = 'docsearce' 
+        registryCredential = 'dockerhub' 
         dockerImage = '' 
     }
     agent any 
