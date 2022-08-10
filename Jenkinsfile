@@ -33,8 +33,6 @@ pipeline {
          stage('Deploy to GKE cluster') {
             steps{
                 echo "Deployment started ..."
-                sh 'ls -ltr'
-                sh 'pwd'
                 sh "sed -i 's/doc-application:latest/doc-application:${BUILD_NUMBER}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', 
                     projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, 
