@@ -1,26 +1,22 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld-gke
+name: doc-application
+labels:
+  app: doc-application
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: hello
-  template:
-    metadata:
-      labels:
-        app: hello
-    spec:
-      containers:
-      - name: hello-app
-        # Replace $LOCATION with your Artifact Registry location (e.g., us-west1).
-        # Replace $GCLOUD_PROJECT with your project ID.
-        image: us-central1-docker.pkg.dev/clinic-to-cloud/hello-repo/helloworld-gke:latest
-        # This app listens on port 8080 for web traffic by default.
-        ports:
-        - containerPort: 8080
-        env:
-          - name: PORT
-            value: "8080"
+strategy:
+  type: Recreate
+template:
+  metadata:
+    labels:
+      app: doc-application
+      tier: doc-application
+  spec:
+    containers:
+    - name: doc-application
+      image: docsearce/doc-application:latest
+      imagePullPolicy: Always
+      ports:
+      - containerPort: 5000
+        name: doc-application
