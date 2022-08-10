@@ -33,7 +33,7 @@ pipeline {
         } 
          stage('Deploy to GKE test cluster') {
             steps{
-                sh "sed -i 's/${registry}:${BUILD_NUMBER}/g' deployment.yaml"
+                sh "sed -i 's/doc-application:latest/doc-application:${BUILD_NUMBER}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', 
                     projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, 
                     location: env.LOCATION, manifestPattern: 'deployment.yaml', 
