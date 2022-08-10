@@ -1,7 +1,7 @@
 pipeline { 
     environment { 
         PROJECT_ID = 'clinic-to-cloud'
-        LOCATION = 'searce.com'
+        LOCATION = 'us-central1'
         CREDENTIALS_ID = 'poc-searce'
         CLUSTER_NAME_TEST = 'poc-searce'
         registry = "docsearce/doc-application" 
