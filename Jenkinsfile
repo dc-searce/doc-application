@@ -1,5 +1,9 @@
 pipeline { 
     environment { 
+        PROJECT_ID = 'clinic-to-cloud'
+        LOCATION = 'searce.com'
+        CREDENTIALS_ID = 'poc-searce'
+        CLUSTER_NAME_TEST = 'poc-searce'
         registry = "docsearce/doc-application" 
         registryCredential = 'dockerhub' 
         dockerImage = '' 
@@ -27,6 +31,12 @@ pipeline {
                 } 
             }
         } 
+         stage('Deploy to GKE test cluster') {
+            steps{
+                sh "sed -i 's/${registry}:${BUILD_NUMBER}/g' deployment.yaml"
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+            }
+        }
          
     }
 }
