@@ -18,26 +18,30 @@ pipeline {
         stage('Building our image') { 
             steps {  
                 script { 
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                    dockerImage = docker.build("${registry}:${env.BUILD_ID}")
                 }
             } 
         }
         stage('Deploy our image') { 
             steps { 
                 script { 
-                    docker.withRegistry( '', registryCredential ) { 
-                        dockerImage.push() 
+                      docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+                            myapp.push("latest")
+                            myapp.push("${env.BUILD_ID}")
                     }
                 } 
             }
         } 
          stage('Deploy to GKE test cluster') {
             steps{
-                sh "sed -i 's/doc-application:latest/doc-application:${BUILD_NUMBER}/g' deployment.yaml"
+                sh "sed -i 's/doc-application:latest/doc-application:${env.BUILD_ID}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', 
-                    projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, 
-                    location: env.LOCATION, manifestPattern: 'deployment.yaml', 
-                    credentialsId: env.CREDENTIALS_ID, verifyDeployments: true
+                    projectId: env.PROJECT_ID, 
+                    clusterName: env.CLUSTER_NAME_TEST, 
+                    location: env.LOCATION, 
+                    manifestPattern: 'deployment.yaml', 
+                    credentialsId: env.CREDENTIALS_ID, 
+                    verifyDeployments: true
                 ])
             }
         }
