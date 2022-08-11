@@ -25,7 +25,6 @@ pipeline {
             steps { 
                 script { 
                       docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                            dockerImage.push("latest")
                             dockerImage.push("${env.BUILD_ID}")
                     }
                 } 
@@ -33,7 +32,11 @@ pipeline {
         } 
          stage('Deploy to GKE test cluster') {
             steps{
-                sh "sed -i 's/doc-application:latest/doc-application:${env.BUILD_ID}/g' deployment.yaml"
+                echo "Deployment started ..."
+                sh 'ls -ltr'
+                sh 'pwd'
+                sh "sed -i 's/doc-application:${env.BUILD_ID}/g' deployment.yaml"
+                echo "KubernetesEngineBuilder started ..."
                 step([$class: 'KubernetesEngineBuilder', 
                     projectId: env.PROJECT_ID, 
                     clusterName: env.CLUSTER_NAME_TEST, 
