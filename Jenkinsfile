@@ -6,7 +6,6 @@ pipeline {
         CLUSTER_NAME_TEST = 'poc-searce'
         registry = "docsearce/doc-application" 
         registryCredential = 'dockerhub' 
-        dockerImage = '' 
     }
     agent any 
     stages { 
@@ -37,7 +36,7 @@ pipeline {
                 } 
             }
         } 
-         stage('Deploy to GKE test cluster') {
+         stage('Deploy to GKE cluster') {
             steps{
                 sh "sed -i 's/doc-application:latest/doc-application:${BUILD_NUMBER}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', 
