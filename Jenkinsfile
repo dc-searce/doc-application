@@ -6,7 +6,6 @@ pipeline {
         CLUSTER_NAME_TEST = 'poc-searce'
         registry = "docsearce/doc-application" 
         registryCredential = 'dockerhub' 
-        dockerImage = '' 
     }
     agent any 
     stages { 
@@ -26,8 +25,8 @@ pipeline {
             steps { 
                 script { 
                       docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                            myapp.push("latest")
-                            myapp.push("${env.BUILD_ID}")
+                            dockerImage.push("latest")
+                            dockerImage.push("${env.BUILD_ID}")
                     }
                 } 
             }
