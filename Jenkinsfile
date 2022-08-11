@@ -6,6 +6,7 @@ pipeline {
         CLUSTER_NAME_TEST = 'poc-searce'
         registry = "docsearce/doc-application" 
         registryCredential = 'dockerhub' 
+        dockerImage = '' 
     }
     agent any 
     stages { 
@@ -17,35 +18,26 @@ pipeline {
         stage('Building our image') { 
             steps {  
                 script { 
-                    sh "docker build -t ${registry}:${env.BUILD_ID} ."
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
                 }
             } 
         }
         stage('Deploy our image') { 
             steps { 
                 script { 
-                     withCredentials( \
-                                 [string(credentialsId: 'dockerhub',\
-                                 variable: 'docker')]) {
-                        sh "docker login -u docsearce -p ${registryCredential}"
+                    docker.withRegistry( '', registryCredential ) { 
+                        dockerImage.push() 
                     }
-                    app.push("${env.BUILD_ID}")
-                    // docker.withRegistry( '', registryCredential ) { 
-                    //     dockerImage.push() 
-                    // }
                 } 
             }
         } 
-         stage('Deploy to GKE cluster') {
+         stage('Deploy to GKE test cluster') {
             steps{
                 sh "sed -i 's/doc-application:latest/doc-application:${BUILD_NUMBER}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', 
-                    projectId: env.PROJECT_ID, 
-                    clusterName: env.CLUSTER_NAME_TEST, 
-                    location: env.LOCATION, 
-                    manifestPattern: 'deployment.yaml', 
-                    credentialsId: env.CREDENTIALS_ID, 
-                    verifyDeployments: true
+                    projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, 
+                    location: env.LOCATION, manifestPattern: 'deployment.yaml', 
+                    credentialsId: env.CREDENTIALS_ID, verifyDeployments: true
                 ])
             }
         }
