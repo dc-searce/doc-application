@@ -1,7 +1,7 @@
 pipeline { 
     environment { 
         PROJECT_ID = 'clinic-to-cloud'
-        LOCATION = 'searce.com'
+        LOCATION = 'us-central1'
         CREDENTIALS_ID = 'poc-searce'
         CLUSTER_NAME_TEST = 'poc-searce'
         registry = "docsearce/doc-application" 
@@ -18,23 +18,36 @@ pipeline {
         stage('Building our image') { 
             steps {  
                 script { 
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                    sh "docker build -t ${registry}:${env.BUILD_ID} ."
                 }
             } 
         }
         stage('Deploy our image') { 
             steps { 
                 script { 
-                    docker.withRegistry( '', registryCredential ) { 
-                        dockerImage.push() 
+                     withCredentials( \
+                                 [string(credentialsId: 'dockerhub',\
+                                 variable: 'dockerhub')]) {
+                        sh "docker login -u docsearce -p ${dockerhub}"
                     }
+                    app.push("${env.BUILD_ID}")
+                    // docker.withRegistry( '', registryCredential ) { 
+                    //     dockerImage.push() 
+                    // }
                 } 
             }
         } 
          stage('Deploy to GKE test cluster') {
             steps{
-                sh "sed -i 's/${registry}:${BUILD_NUMBER}/g' deployment.yaml"
-                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                sh "sed -i 's/doc-application:latest/doc-application:${BUILD_NUMBER}/g' deployment.yaml"
+                step([$class: 'KubernetesEngineBuilder', 
+                    projectId: env.PROJECT_ID, 
+                    clusterName: env.CLUSTER_NAME_TEST, 
+                    location: env.LOCATION, 
+                    manifestPattern: 'deployment.yaml', 
+                    credentialsId: env.CREDENTIALS_ID, 
+                    verifyDeployments: true
+                ])
             }
         }
          
