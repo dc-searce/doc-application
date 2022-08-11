@@ -27,7 +27,7 @@ pipeline {
                      withCredentials( \
                                  [string(credentialsId: 'dockerhub',\
                                  variable: 'dockerhub')]) {
-                        sh "docker login -u docsearce -p ${dockerhub}"
+                        sh "docker login -u docsearce -p ${registryCredential}"
                     }
                     app.push("${env.BUILD_ID}")
                     // docker.withRegistry( '', registryCredential ) { 
