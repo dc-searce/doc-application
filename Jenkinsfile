@@ -39,6 +39,7 @@ pipeline {
                 sh "sed -i 's/doc-application:latest/doc-application:${env.BUILD_ID}/g' deployment.yaml"
                 sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
                 sh 'chmod u+x /var/jenkins_home/workspace/JenkinsDockerKubernetes/kubectl'
+                echo "Path===> ... ${PATH}"
                 sh 'kubectl --help'
                 echo "KubernetesEngineBuilder started ... ${PATH}"
                 step([$class: 'KubernetesEngineBuilder', 
