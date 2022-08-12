@@ -34,8 +34,6 @@ pipeline {
              
             steps{
                 echo "Deployment started ..."
-		sh 'cp ~/config ~jenkins/'
-		sh 'chown -R jenkins: ~jenkins/'
                 sh 'ls -ltr'
                 sh 'pwd'
                 sh "sed -i 's/doc-application:latest/doc-application:${env.BUILD_ID}/g' deployment.yaml"
