@@ -37,8 +37,13 @@ pipeline {
                 sh 'ls -ltr'
                 sh 'pwd'
                 sh "sed -i 's/doc-application:latest/doc-application:${env.BUILD_ID}/g' deployment.yaml"
-                sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
-                sh 'chmod u+x ./kubectl'
+               sh """
+                        mkdir -p .bin
+                        cd .bin
+                        curl -LO https://storage.googleapis.com/kubernetes-release/release/v${kubectlVersion}/bin/linux/amd64/kubectl
+                        chmod +x kubectl
+                        kubectl version --client 
+                    """
                 sh './kubectl --help'
                 echo "KubernetesEngineBuilder started ..."
                 step([$class: 'KubernetesEngineBuilder', 
