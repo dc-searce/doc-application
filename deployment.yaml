@@ -20,3 +20,5 @@ template:
       ports:
       - containerPort: 5000
         name: doc-application
+        
+        
