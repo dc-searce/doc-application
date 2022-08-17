@@ -5,32 +5,32 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: dotnet-application
+      app: doc-application
   template:
     metadata:
       labels:
-        app: dotnet-application
+        app: doc-application
     spec:
      containers:
-     - name: dotnet-application
+     - name: doc-application
        image: docsearce/doc-application:latest
        imagePullPolicy: Always
        ports:
-          - containerPort: 8080
+          - containerPort: 80
             name: doc-application
             
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: dotnet-service
+  name: doc-application
   labels:
-    app: dotnet-application
+    app: doc-application
 spec:
   ports:
-    - port: 80
-      targetPort: 8080
+    - port: 8080
+      targetPort: 80
   selector:
-    app: dotnet-application
-    tier: dotnet-application
+    app: doc-application
+    tier: doc-application
   type: LoadBalancer
