@@ -17,28 +17,25 @@ pipeline {
         stage('Building our image') { 
             steps {  
                 script { 
-                    sh "docker build -t ${registry}:${env.BUILD_ID} ."
+                    dockerImage = docker.build("${registry}:${env.BUILD_ID}")
                 }
             } 
         }
         stage('Deploy our image') { 
             steps { 
                 script { 
-                     withCredentials( \
-                                 [string(credentialsId: 'dockerhub',\
-                                 variable: 'dockerhub')]) {
-                        sh "docker login -u docsearce -p ${dockerhub}"
+                      docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+                            dockerImage.push("${env.BUILD_ID}")
                     }
-                    app.push("${env.BUILD_ID}")
-                    // docker.withRegistry( '', registryCredential ) { 
-                    //     dockerImage.push() 
-                    // }
                 } 
             }
         } 
-         stage('Deploy to GKE cluster') {
+         stage('Deploy to GKE test cluster') {
+             
             steps{
+                echo "Deployment started ..."
                 sh "sed -i 's/doc-application:latest/doc-application:${BUILD_NUMBER}/g' deployment.yaml"
+                echo "KubernetesEngineBuilder started ... ${PATH}"
                 step([$class: 'KubernetesEngineBuilder', 
                     projectId: env.PROJECT_ID, 
                     clusterName: env.CLUSTER_NAME_TEST, 
@@ -48,7 +45,6 @@ pipeline {
                     verifyDeployments: true
                 ])
             }
-        }
-         
+        }  
     }
 }

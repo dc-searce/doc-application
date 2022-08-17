@@ -1,22 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-name: doc-application
-labels:
-  app: doc-application
+  name: doc-application
 spec:
-strategy:
-  type: Recreate
-template:
-  metadata:
-    labels:
+  selector:
+    matchLabels:
       app: doc-application
-      tier: doc-application
-  spec:
-    containers:
-    - name: doc-application
-      image: docsearce/doc-application:latest
-      imagePullPolicy: Always
-      ports:
-      - containerPort: 5000
-        name: doc-application
+  template:
+    metadata:
+      labels:
+        app: doc-application
+    spec:
+     containers:
+     - name: doc-application
+       image: docsearce/doc-application:latest
+       imagePullPolicy: Always
+       ports:
+          - containerPort: 5000
+            name: doc-application
+            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: doc-application
+  labels:
+    app: doc-application
+spec:
+  ports:
+    - port: 5000
+      targetPort: 5000
+  selector:
+    app: doc-application
+    tier: doc-application
+  type: LoadBalancer
