@@ -34,7 +34,7 @@ pipeline {
              
             steps{
                 echo "Deployment started ..."
-                sh 'kubectl --help'
+                sh "sed -i 's/doc-application:latest/doc-application:${BUILD_NUMBER}/g' deployment.yaml"
                 echo "KubernetesEngineBuilder started ... ${PATH}"
                 step([$class: 'KubernetesEngineBuilder', 
                     projectId: env.PROJECT_ID, 
