@@ -28,8 +28,8 @@ metadata:
     app: doc-application
 spec:
   ports:
-    - port: 8080
-      targetPort: 80
+    - port: 80
+      targetPort: 8080
   selector:
     app: doc-application
     tier: doc-application
