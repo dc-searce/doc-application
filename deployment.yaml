@@ -18,3 +18,19 @@ spec:
        ports:
           - containerPort: 5000
             name: doc-application
+            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: doc-application
+  labels:
+    app: doc-application
+spec:
+  ports:
+    - port: 5000
+      targetPort: 5000
+  selector:
+    app: doc-application
+    tier: doc-application
+  type: LoadBalancer
