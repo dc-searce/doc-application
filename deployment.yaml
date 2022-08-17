@@ -1,31 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dotnet-deployment
+  name: doc-application
 spec:
   selector:
     matchLabels:
-      app: dotnetapp
+      app: dotnet-application
   template:
     metadata:
       labels:
-        app: dotnetapp
+        app: dotnet-application
     spec:
      containers:
-     - name: dotnet
+     - name: dotnet-application
        image: docsearce/doc-application:latest
        imagePullPolicy: Always
        ports:
-          - containerPort: 80
+          - containerPort: 5000
+            name: doc-application
             
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: dotnet-service
+  labels:
+    app: dotnet-application
 spec:
   ports:
-    - port: 8080
-      targetPort: 80
+    - port: 5000
+      targetPort: 5000
   selector:
-    app: dotnetapp
+    app: dotnet-application
+    tier: dotnet-application
+  type: LoadBalancer
