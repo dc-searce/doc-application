@@ -4,7 +4,7 @@ metadata:
   name: doc-application
 labels:
   app: doc-application
-spec:
+  spec:
   strategy:
     type: Recreate
 template:
