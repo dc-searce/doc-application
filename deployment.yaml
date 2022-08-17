@@ -16,7 +16,7 @@ spec:
        image: docsearce/doc-application:latest
        imagePullPolicy: IfNotPresent
        ports:
-          - containerPort: 8080
+          - containerPort: 80
             name: doc-application
             
 ---
@@ -29,7 +29,7 @@ metadata:
 spec:
   ports:
     - port: 8080
-      targetPort: 8080
+      targetPort: 80
   selector:
     app: doc-application
     tier: doc-application
